@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import styled from "styled-components";
+import axios from "axios";
 import useAxios from "axios-hooks";
 import Track from "../components/Track";
 
@@ -37,24 +38,42 @@ const tracks = [
 ];
 
 const Feed = () => {
-  const maazelId = "4w5LgUT6bfJnNq6wSFbND7";
-  const [{ data, loading, error }] = useAxios({
-    url: `https://api.spotify.com/v1/artists/${maazelId}/albums`,
-    headers: {
-      Authorization: `Bearer ${process.env.REACT_APP_SPOTIFY_ACCESS_TOKEN}`
-    }
-  });
-  console.log(data);
+  const [tracks, setTracks] = useState([]);
+
+  const localArtists = useMemo(
+    () => JSON.parse(localStorage.getItem("artists")) || [],
+    [localStorage]
+  );
+  useEffect(() => {
+    const fetchTracks = artists => {
+      Promise.all(
+        artists.map(artistId =>
+          axios.get(`https://api.spotify.com/v1/artists/${artistId}/albums`, {
+            headers: {
+              Authorization: `Bearer ${process.env.REACT_APP_SPOTIFY_ACCESS_TOKEN}`
+            }
+          })
+        )
+      )
+        .then(responses => responses.map(res => res.data.items))
+        .then(tracksRes => setTracks(tracksRes.flat()));
+    };
+
+    fetchTracks(localArtists);
+  }, [localArtists, setTracks]);
+
   return (
     <div>
       <H1>Releases</H1>
-      {!loading && (
-        <TrackList>
-          {data.items.map(track => (
-            <Track track={track}></Track>
+      <TrackList>
+        {tracks
+          .filter(track => track.album_type !== "compilation")
+          .sort((a, b) => new Date(b.release_date) - new Date(a.release_date))
+          .slice(0, 50)
+          .map(track => (
+            <Track key={track.name} track={track}></Track>
           ))}
-        </TrackList>
-      )}
+      </TrackList>
     </div>
   );
 };

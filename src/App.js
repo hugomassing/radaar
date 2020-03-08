@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import Header from "./components/Header";
 import Feed from "./views/Feed";
+import Artists from "./views/Artists";
 import reset from "styled-reset";
 
 const GlobalStyle = createGlobalStyle`
@@ -29,12 +30,14 @@ const Content = styled.section`
 `;
 
 function App() {
+  const [selectedMenu, setSelectedMenu] = useState("feed");
   return (
     <AppContainer>
       <GlobalStyle />
-      <Header />
+      <Header setSelectedMenu={setSelectedMenu} selectedMenu={selectedMenu} />
       <Content>
-        <Feed />
+        {selectedMenu === "feed" && <Feed />}
+        {selectedMenu === "artists" && <Artists />}
       </Content>
     </AppContainer>
   );

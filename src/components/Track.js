@@ -43,6 +43,7 @@ const Track = ({
     name,
     artists,
     album_type,
+    release_date,
     labelName,
     images: [artwork]
   }
@@ -52,7 +53,9 @@ const Track = ({
     <TrackInfos>
       <TrackName>{name}</TrackName>
       <Artist>{artists.map(artist => artist.name).join(", ")}</Artist>
-      <Misc>{`${album_type}`}</Misc>
+      <Misc>
+        {album_type} - {release_date}
+      </Misc>
     </TrackInfos>
   </TrackContainer>
 );
