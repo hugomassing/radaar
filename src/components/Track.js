@@ -32,6 +32,7 @@ const Artist = styled.p`
   font-size: 16px;
   color: #838383;
 `;
+
 const Misc = styled.p`
   line-height: 24px;
   font-size: 16px;
@@ -44,7 +45,6 @@ const Track = ({
     artists,
     album_type,
     release_date,
-    labelName,
     images: [artwork]
   }
 }) => (

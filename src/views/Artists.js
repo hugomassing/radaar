@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import useAxios from "axios-hooks";
 import Artist from "../components/Artist";
@@ -10,16 +10,20 @@ const H1 = styled.h1`
 `;
 
 const SearchResults = styled.ul`
+  width: 100%;
   background-color: white;
   padding: 8px 0;
   margin-top: 8px;
   border-radius: 4px;
   position: absolute;
   border: 1px solid #f2f2f2;
+  z-index: 10;
+  max-height: 180px;
+  overflow-y: auto;
 `;
 
 const SearchItem = styled.li`
-  padding: 4px 8px;
+  padding: 8px 16px;
   cursor: pointer;
   :hover {
     background: #f2f2f2;
@@ -28,12 +32,38 @@ const SearchItem = styled.li`
 
 const Search = styled.div`
   position: relative;
+  width: 240px;
+`;
+
+const SearchInput = styled.input`
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+  border-radius: 4px;
+  border: 1px solid #f2f2f2;
+  padding: 0 16px;
+  font: inherit;
+  ::placeholder {
+    color: #aaaaaa;
+    font-weight: 100;
+  }
+  outline-color: #f2f2f2;
+`;
+
+const Artists = styled.div`
+  margin-top: 40px;
+  position: relative;
+  display: grid;
+  grid: auto-flow / 1fr 1fr 1fr;
+  grid-gap: 40px;
 `;
 
 const Feed = () => {
   const [inputFocus, setInputFocus] = useState(false);
   const [search, setSearch] = useState("");
-  const localArtists = JSON.parse(localStorage.getItem("artists")) || [];
+  const [localArtists, setLocalArtists] = useState(
+    JSON.parse(localStorage.getItem("artists")) || []
+  );
   const [{ data, loading, error }] = useAxios({
     url: `https://api.spotify.com/v1/artists/?ids=${localArtists.join(",")}`,
     headers: {
@@ -51,25 +81,32 @@ const Feed = () => {
     }
   });
 
+  useEffect(() => {
+    localStorage.setItem("artists", JSON.stringify(localArtists));
+  }, [localArtists, localStorage]);
+
   const addArtist = artist => {
-    localStorage.setItem(
-      "artists",
-      JSON.stringify([...localArtists, artist.id])
-    );
+    console.log([...localArtists, artist.id]);
+    if (!localArtists.includes(artist.id))
+      setLocalArtists(state => [...state, artist.id]);
     setSearch(artist.name);
     setInputFocus(false);
+  };
+
+  const removeArtist = artistId => {
+    setLocalArtists(localArtists.filter(id => id !== artistId));
   };
 
   return (
     <div>
       <H1>Artists</H1>
-      Search a new artist
       <Search>
-        <input
+        <SearchInput
           type="text"
           value={search}
           onChange={e => setSearch(e.target.value)}
           onFocus={e => setInputFocus(true)}
+          placeholder="search an artist"
         />
         {!searchLoading && !searchError && inputFocus && searchData && (
           <SearchResults>
@@ -81,9 +118,17 @@ const Feed = () => {
           </SearchResults>
         )}
       </Search>
-      {!loading &&
-        data &&
-        data.artists.map(artist => <Artist artist={artist} />)}
+      {!loading && data && (
+        <Artists>
+          {data.artists.map(artist => (
+            <Artist
+              artist={artist}
+              heartSelected={true}
+              onHeartClick={() => removeArtist(artist.id)}
+            />
+          ))}
+        </Artists>
+      )}
     </div>
   );
 };
