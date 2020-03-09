@@ -4,7 +4,8 @@ import Header from "./components/Header";
 import Feed from "./views/Feed";
 import Artists from "./views/Artists";
 import reset from "styled-reset";
-
+import AuthContext from "./Auth.context";
+import useAxios from "axios-hooks";
 const GlobalStyle = createGlobalStyle`
   ${reset}
   body {
@@ -17,30 +18,39 @@ const GlobalStyle = createGlobalStyle`
     color: #232323;
   }
 `;
-
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
-
 const Content = styled.section`
   width: 1040px;
   margin-top: 80px;
 `;
-
 function App() {
   const [selectedMenu, setSelectedMenu] = useState("feed");
+  const [{ data, loading }] = useAxios({
+    url: `https://radaar-back.now.sh/api`,
+    headers: {
+      "content-type": "application/json"
+    }
+  });
   return (
-    <AppContainer>
-      <GlobalStyle />
-      <Header setSelectedMenu={setSelectedMenu} selectedMenu={selectedMenu} />
-      <Content>
-        {selectedMenu === "feed" && <Feed />}
-        {selectedMenu === "artists" && <Artists />}
-      </Content>
-    </AppContainer>
+    !loading && (
+      <AuthContext.Provider value={{ accessToken: data.access_token }}>
+        <AppContainer>
+          <GlobalStyle />
+          <Header
+            setSelectedMenu={setSelectedMenu}
+            selectedMenu={selectedMenu}
+          />
+          <Content>
+            {selectedMenu === "feed" && <Feed />}
+            {selectedMenu === "artists" && <Artists />}
+          </Content>
+        </AppContainer>
+      </AuthContext.Provider>
+    )
   );
 }
-
 export default App;

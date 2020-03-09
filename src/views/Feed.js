@@ -1,36 +1,32 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
-import groupBy from "lodash/groupBy";
 import Track from "../components/Track";
-
+import AuthContext from "../Auth.context";
 dayjs.extend(isBetween);
 const H1 = styled.h1`
   line-height: 40px;
   font-size: 32px;
   margin-bottom: 24px;
 `;
-
 const TrackList = styled.div`
   & > div {
     margin-top: 16px;
   }
 `;
-
 const DateLabel = styled.div`
   line-height: 24px;
   font-size: 16px;
   color: #aaaaaa;
 `;
-
 const Feed = () => {
   const [tracks, setTracks] = useState([]);
-
+  const { accessToken } = useContext(AuthContext);
   const localArtists = useMemo(
     () => JSON.parse(localStorage.getItem("artists")) || [],
-    [localStorage]
+    []
   );
   useEffect(() => {
     const fetchTracks = artists => {
@@ -40,7 +36,7 @@ const Feed = () => {
             `https://api.spotify.com/v1/artists/${artistId}/albums?country=FR`,
             {
               headers: {
-                Authorization: `Bearer ${process.env.REACT_APP_SPOTIFY_ACCESS_TOKEN}`
+                Authorization: `Bearer ${accessToken}`
               }
             }
           )
@@ -49,10 +45,8 @@ const Feed = () => {
         .then(responses => responses.map(res => res.data.items))
         .then(tracksRes => setTracks(tracksRes.flat()));
     };
-
     fetchTracks(localArtists);
-  }, [localArtists, setTracks]);
-
+  }, [localArtists, setTracks, accessToken]);
   const dateRanges = [
     { label: "today", dateRange: [dayjs(), dayjs().subtract(1, "day")] },
     {
@@ -72,7 +66,6 @@ const Feed = () => {
       dateRange: [dayjs().subtract(1, "month"), dayjs("1992-02-22")]
     }
   ];
-
   return (
     <div>
       <H1>Releases</H1>
@@ -108,5 +101,4 @@ const Feed = () => {
     </div>
   );
 };
-
 export default Feed;
