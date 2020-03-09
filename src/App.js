@@ -24,7 +24,7 @@ const AppContainer = styled.div`
   align-items: center;
 `;
 const Content = styled.section`
-  width: 1040px;
+  max-width: 1040px;
   margin-top: 80px;
 `;
 function App() {

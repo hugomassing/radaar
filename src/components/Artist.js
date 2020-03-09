@@ -9,8 +9,9 @@ const ArtistContainer = styled.div`
   flex-direction: column;
 `;
 const Artwork = styled.div`
-  height: 280px;
-  width: 280px;
+  height: 256px;
+  width: 256px;
+
   background-color: #d2d2d2;
   border-radius: 2px;
   background-image: url(${p => p.url});

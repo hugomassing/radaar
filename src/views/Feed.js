@@ -47,6 +47,7 @@ const Feed = () => {
     };
     fetchTracks(localArtists);
   }, [localArtists, setTracks, accessToken]);
+
   const dateRanges = [
     { label: "today", dateRange: [dayjs(), dayjs().subtract(1, "day")] },
     {
@@ -66,6 +67,7 @@ const Feed = () => {
       dateRange: [dayjs().subtract(1, "month"), dayjs("1992-02-22")]
     }
   ];
+
   return (
     <div>
       <H1>Releases</H1>
