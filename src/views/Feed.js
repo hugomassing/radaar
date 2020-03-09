@@ -42,8 +42,41 @@ const Feed = () => {
           )
         )
       )
-        .then(responses => responses.map(res => res.data.items))
-        .then(tracksRes => setTracks(tracksRes.flat()));
+        .then(responses => responses.map(res => res.data.items).flat())
+        .then(responses =>
+          Promise.all(
+            responses.map(async element => {
+              if (element.album_group === "appears_on") {
+                const {
+                  data: { items }
+                } = await axios.get(
+                  `https://api.spotify.com/v1/albums/${element.id}/tracks`,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${accessToken}`
+                    }
+                  }
+                );
+                return {
+                  ...element,
+                  artists: [
+                    ...element.artists,
+                    ...items.map(track => track.artists).flat()
+                  ].reduce(
+                    (unique, item) =>
+                      unique.find(({ id }) => id === item.id)
+                        ? unique
+                        : [...unique, item],
+                    []
+                  )
+                };
+              }
+              return element;
+            })
+          )
+        )
+        .then(tracksRes => tracksRes)
+        .then(tracksRes => setTracks(tracksRes));
     };
     fetchTracks(localArtists);
   }, [localArtists, setTracks, accessToken]);

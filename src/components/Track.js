@@ -52,7 +52,12 @@ const Track = ({
     <Artwork url={artwork.url} />
     <TrackInfos>
       <TrackName>{name}</TrackName>
-      <Artist>{artists.map(artist => artist.name).join(", ")}</Artist>
+      <Artist>
+        {artists
+          .map(artist => artist.name)
+          .slice(0, 10)
+          .join(", ")}
+      </Artist>
       <Misc>
         {album_type} - {release_date}
       </Misc>
