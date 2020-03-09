@@ -6,21 +6,86 @@ import isBetween from "dayjs/plugin/isBetween";
 import Track from "../components/Track";
 import AuthContext from "../Auth.context";
 dayjs.extend(isBetween);
+
 const H1 = styled.h1`
   line-height: 40px;
   font-size: 32px;
   margin-bottom: 24px;
 `;
+
 const TrackList = styled.div`
   & > div {
     margin-top: 16px;
   }
 `;
+
 const DateLabel = styled.div`
   line-height: 24px;
   font-size: 16px;
   color: #aaaaaa;
 `;
+
+const dateRanges = [
+  {
+    label: "today",
+    dateRange: [
+      dayjs(),
+      dayjs()
+        .startOf("day")
+        .subtract(1, "day")
+        .add(1, "minute")
+    ]
+  },
+  {
+    label: "yesterday",
+    dateRange: [
+      dayjs()
+        .startOf("day")
+        .subtract(1, "day")
+        .add(1, "minute"),
+      dayjs()
+        .startOf("day")
+        .subtract(2, "day")
+        .add(1, "minute")
+    ]
+  },
+  {
+    label: "last week",
+    dateRange: [
+      dayjs()
+        .startOf("day")
+        .subtract(2, "day")
+        .add(1, "minute"),
+      dayjs()
+        .startOf("day")
+        .subtract(1, "week")
+        .add(1, "minute")
+    ]
+  },
+  {
+    label: "last month",
+    dateRange: [
+      dayjs()
+        .startOf("day")
+        .subtract(1, "week")
+        .add(1, "minute"),
+      dayjs()
+        .subtract(1, "month")
+        .add(1, "minute")
+    ]
+  },
+  {
+    label: "old af",
+    dateRange: [
+      dayjs()
+        .startOf("day")
+        .subtract(1, "month")
+        .add(1, "minute"),
+      dayjs("1992-02-22")
+    ]
+  }
+];
+
 const Feed = () => {
   const [tracks, setTracks] = useState([]);
   const { accessToken } = useContext(AuthContext);
@@ -46,7 +111,10 @@ const Feed = () => {
         .then(responses =>
           Promise.all(
             responses.map(async element => {
-              if (element.album_group === "appears_on") {
+              if (
+                element.album_group === "appears_on" &&
+                element.album_type !== "compilation"
+              ) {
                 const {
                   data: { items }
                 } = await axios.get(
@@ -75,31 +143,14 @@ const Feed = () => {
             })
           )
         )
-        .then(tracksRes => tracksRes)
+        .then(tracksRes => {
+          console.log(tracksRes.map(track => track.name));
+          return tracksRes;
+        })
         .then(tracksRes => setTracks(tracksRes));
     };
     fetchTracks(localArtists);
   }, [localArtists, setTracks, accessToken]);
-
-  const dateRanges = [
-    { label: "today", dateRange: [dayjs(), dayjs().subtract(1, "day")] },
-    {
-      label: "yesterday",
-      dateRange: [dayjs().subtract(1, "day"), dayjs().subtract(2, "day")]
-    },
-    {
-      label: "last week",
-      dateRange: [dayjs().subtract(2, "day"), dayjs().subtract(1, "week")]
-    },
-    {
-      label: "last month",
-      dateRange: [dayjs().subtract(1, "week"), dayjs().subtract(1, "month")]
-    },
-    {
-      label: "old af",
-      dateRange: [dayjs().subtract(1, "month"), dayjs("1992-02-22")]
-    }
-  ];
 
   return (
     <div>
