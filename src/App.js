@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
-import Header from "./components/Header";
 import Feed from "./views/Feed";
 import Artists from "./views/Artists";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 import reset from "styled-reset";
 import AuthContext from "./Auth.context";
 import useAxios from "axios-hooks";
+
 const GlobalStyle = createGlobalStyle`
   ${reset}
   body {
@@ -22,11 +24,18 @@ const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
+  height: 100%;
 `;
 const Content = styled.section`
-  width: 1040px;
+  width: 80%;
+  max-width: 1040px;
+  margin: 0 80px;
   margin-top: 80px;
+  margin-bottom: 80px;
+  flex-grow: 2;
 `;
+
 function App() {
   const [selectedMenu, setSelectedMenu] = useState("feed");
   const [{ data, loading }] = useAxios({
@@ -45,9 +54,12 @@ function App() {
             selectedMenu={selectedMenu}
           />
           <Content>
-            {selectedMenu === "feed" && <Feed />}
+            {selectedMenu === "feed" && (
+              <Feed setSelectedMenu={setSelectedMenu} />
+            )}
             {selectedMenu === "artists" && <Artists />}
           </Content>
+          <Footer />
         </AppContainer>
       </AuthContext.Provider>
     )

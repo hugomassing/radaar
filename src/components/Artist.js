@@ -24,6 +24,7 @@ const ArtistInfos = styled.div`
 const ArtistName = styled.p`
   line-height: 40px;
   font-size: 32px;
+  width: calc(100% - 48px);
 `;
 const Genres = styled.p`
   line-height: 24px;
@@ -49,7 +50,7 @@ const Artist = ({
       <Artwork url={profileImage.url} />
       <ArtistInfos>
         <ArtistName>{name}</ArtistName>
-        <Genres>{genres.join(", ")}</Genres>
+        <Genres>{genres.slice(1, 10).join(", ")}</Genres>
         <StyledLikeButton onClick={onHeartClick} />
       </ArtistInfos>
     </ArtistContainer>

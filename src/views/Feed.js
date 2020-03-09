@@ -4,15 +4,19 @@ import axios from "axios";
 import dayjs from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import Track from "../components/Track";
+import Empty from "../components/Empty";
 import AuthContext from "../Auth.context";
 dayjs.extend(isBetween);
 
+const EmptyContent = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 const H1 = styled.h1`
   line-height: 40px;
   font-size: 32px;
   margin-bottom: 24px;
 `;
-
 const TrackList = styled.div`
   & > div {
     margin-top: 16px;
@@ -86,7 +90,7 @@ const dateRanges = [
   }
 ];
 
-const Feed = () => {
+const Feed = ({ setSelectedMenu }) => {
   const [tracks, setTracks] = useState([]);
   const { accessToken } = useContext(AuthContext);
   const localArtists = useMemo(
@@ -152,7 +156,7 @@ const Feed = () => {
     fetchTracks(localArtists);
   }, [localArtists, setTracks, accessToken]);
 
-  return (
+  return localArtists.length > 0 ? (
     <div>
       <H1>Releases</H1>
       <TrackList>
@@ -185,6 +189,10 @@ const Feed = () => {
         })}
       </TrackList>
     </div>
+  ) : (
+    <EmptyContent>
+      <Empty onArtistClick={() => setSelectedMenu("artists")} />
+    </EmptyContent>
   );
 };
 export default Feed;
