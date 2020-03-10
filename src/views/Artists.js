@@ -51,7 +51,6 @@ const Artists = styled.div`
   display: grid;
   grid: auto-flow / 1fr 1fr 1fr;
   grid-gap: 40px;
-  margin-bottom: 40px;
 `;
 const Feed = () => {
   const [inputFocus, setInputFocus] = useState(false);

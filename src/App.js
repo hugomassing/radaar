@@ -24,8 +24,7 @@ const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  height: 100%;
+  min-height: 100%;
 `;
 const Content = styled.section`
   width: 80%;
