@@ -3,6 +3,10 @@ import styled from "styled-components";
 import useAxios from "axios-hooks";
 import Artist from "../components/Artist";
 import AuthContext from "../Auth.context";
+import ReactPlaceholder from "react-placeholder";
+import "react-placeholder/lib/reactPlaceholder.css";
+import ArtistPlaceholder from "../components/ArtistPlaceholder";
+
 const H1 = styled.h1`
   line-height: 40px;
   font-size: 32px;
@@ -60,7 +64,7 @@ const Feed = () => {
     JSON.parse(localStorage.getItem("artists")) || []
   );
 
-  const [{ data, loading }] = useAxios({
+  const [{ data: { artists } = { artists: [] }, loading }] = useAxios({
     url: `https://api.spotify.com/v1/artists/?ids=${localArtists.join(",")}`,
     headers: {
       Authorization: `Bearer ${accessToken}`
@@ -114,17 +118,20 @@ const Feed = () => {
           </SearchResults>
         )}
       </Search>
-      {!loading && data && (
-        <Artists>
-          {data.artists.map(artist => (
-            <Artist
-              artist={artist}
-              heartSelected={true}
-              onHeartClick={() => removeArtist(artist.id)}
-            />
-          ))}
-        </Artists>
-      )}
+
+      <Artists>
+        {loading
+          ? [0, 1, 2, 3, 4, 5].map(() => (
+              <ReactPlaceholder customPlaceholder={<ArtistPlaceholder />} />
+            ))
+          : artists.map(artist => (
+              <Artist
+                artist={artist}
+                heartSelected={true}
+                onHeartClick={() => removeArtist(artist.id)}
+              />
+            ))}
+      </Artists>
     </div>
   );
 };

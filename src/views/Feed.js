@@ -2,8 +2,11 @@ import React, { useState, useEffect, useMemo, useContext } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import dayjs from "dayjs";
+import ReactPlaceholder from "react-placeholder";
 import isBetween from "dayjs/plugin/isBetween";
 import Track from "../components/Track";
+import { motion } from "framer-motion";
+import TrackPlaceholder from "../components/TrackPlaceholder";
 import Empty from "../components/Empty";
 import AuthContext from "../Auth.context";
 dayjs.extend(isBetween);
@@ -21,6 +24,10 @@ const TrackList = styled.div`
   & > div {
     margin-top: 16px;
   }
+`;
+
+const Green = styled.a`
+  color: #03da8c;
 `;
 
 const DateLabel = styled.div`
@@ -89,9 +96,9 @@ const dateRanges = [
     ]
   }
 ];
-
 const Feed = ({ setSelectedMenu }) => {
   const [tracks, setTracks] = useState([]);
+  const [loading, setLoading] = useState(false);
   const { accessToken } = useContext(AuthContext);
   const localArtists = useMemo(
     () => JSON.parse(localStorage.getItem("artists")) || [],
@@ -99,6 +106,7 @@ const Feed = ({ setSelectedMenu }) => {
   );
   useEffect(() => {
     const fetchTracks = artists => {
+      setLoading(true);
       Promise.all(
         artists.map(artistId =>
           axios.get(
@@ -148,10 +156,9 @@ const Feed = ({ setSelectedMenu }) => {
           )
         )
         .then(tracksRes => {
-          console.log(tracksRes.map(track => track.name));
-          return tracksRes;
-        })
-        .then(tracksRes => setTracks(tracksRes));
+          setTracks(tracksRes);
+          setLoading(false);
+        });
     };
     fetchTracks(localArtists);
   }, [localArtists, setTracks, accessToken]);
@@ -160,33 +167,54 @@ const Feed = ({ setSelectedMenu }) => {
     <div>
       <H1>Releases</H1>
       <TrackList>
-        {dateRanges.map(range => {
-          return tracks
-            .filter(track => track.album_type !== "compilation")
-            .reduce(
-              (unique, item) =>
-                unique.find(({ id }) => id === item.id)
-                  ? unique
-                  : [...unique, item],
-              []
-            )
-            .sort((a, b) => new Date(b.release_date) - new Date(a.release_date))
-            .slice(0, 30)
-            .filter(track =>
-              dayjs(track.release_date).isBetween(
-                range.dateRange[0],
-                range.dateRange[1]
+        {loading ? (
+          <>
+            <DateLabel>
+              <Green>today</Green>
+            </DateLabel>
+            {[0, 1, 2, 3, 4, 5, 6].map((i, index) => (
+              <ReactPlaceholder customPlaceholder={<TrackPlaceholder />} />
+            ))}
+          </>
+        ) : (
+          dateRanges.map(range => {
+            return tracks
+              .filter(track => track.album_type !== "compilation")
+              .reduce(
+                (unique, item) =>
+                  unique.find(({ id }) => id === item.id)
+                    ? unique
+                    : [...unique, item],
+                []
               )
-            )
-            .map((track, index) => {
-              return (
-                <>
-                  {index === 0 && <DateLabel>{range.label}</DateLabel>}
-                  <Track key={track.id} track={track}></Track>
-                </>
-              );
-            });
-        })}
+              .sort(
+                (a, b) => new Date(b.release_date) - new Date(a.release_date)
+              )
+              .slice(0, 30)
+              .filter(track =>
+                dayjs(track.release_date).isBetween(
+                  range.dateRange[0],
+                  range.dateRange[1]
+                )
+              )
+              .map((track, index) => {
+                return (
+                  <>
+                    {index === 0 && (
+                      <DateLabel>
+                        {range.label === "today" ? (
+                          <Green>{range.label}</Green>
+                        ) : (
+                          range.label
+                        )}
+                      </DateLabel>
+                    )}
+                    <Track key={track.id} track={track}></Track>
+                  </>
+                );
+              });
+          })
+        )}
       </TrackList>
     </div>
   ) : (

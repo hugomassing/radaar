@@ -7,6 +7,7 @@ import Footer from "./components/Footer";
 import reset from "styled-reset";
 import AuthContext from "./Auth.context";
 import useAxios from "axios-hooks";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -18,6 +19,9 @@ const GlobalStyle = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
     font-weight: 500;
     color: #232323;
+  }
+  #root {
+    height: 100%;
   }
 `;
 const AppContainer = styled.div`
@@ -47,18 +51,21 @@ function App() {
     !loading && (
       <AuthContext.Provider value={{ accessToken: data.access_token }}>
         <AppContainer>
-          <GlobalStyle />
-          <Header
-            setSelectedMenu={setSelectedMenu}
-            selectedMenu={selectedMenu}
-          />
-          <Content>
-            {selectedMenu === "feed" && (
-              <Feed setSelectedMenu={setSelectedMenu} />
-            )}
-            {selectedMenu === "artists" && <Artists />}
-          </Content>
-          <Footer />
+          <Router>
+            <GlobalStyle />
+            <Header />
+            <Content>
+              <Switch>
+                <Route path="/" exact>
+                  <Feed />
+                </Route>
+                <Route path="/artists">
+                  <Artists />
+                </Route>
+              </Switch>
+            </Content>
+            <Footer />
+          </Router>
         </AppContainer>
       </AuthContext.Provider>
     )

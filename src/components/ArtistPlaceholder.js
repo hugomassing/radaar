@@ -1,14 +1,18 @@
 import React from "react";
 import styled from "styled-components";
 import LikeButton from "./LikeButton";
-import { motion } from "framer-motion";
 
-const ArtistContainer = styled(motion.div)`
+const ArtistContainer = styled.div`
   background: #f2f2f2;
   border-radius: 8px;
   padding: 32px;
   display: flex;
   flex-direction: column;
+  filter: grayscale(1);
+  p {
+    background-color: #d2d2d2;
+    font-size: 0;
+  }
 `;
 const Artwork = styled.div`
   height: 256px;
@@ -16,7 +20,6 @@ const Artwork = styled.div`
 
   background-color: #d2d2d2;
   border-radius: 2px;
-  background-image: url(${p => p.url});
   background-size: cover;
 `;
 const ArtistInfos = styled.div`
@@ -26,38 +29,30 @@ const ArtistInfos = styled.div`
 const ArtistName = styled.p`
   line-height: 40px;
   font-size: 32px;
-  width: calc(100% - 48px);
+  width: 200px;
 `;
 const Genres = styled.p`
   line-height: 24px;
   font-size: 16px;
   color: #838383;
+  margin-top: 8px;
 `;
 const StyledLikeButton = styled(LikeButton)`
   position: absolute;
   right: 0;
   top: 0;
 `;
-const Artist = ({
-  artist: {
-    name,
-    images: [profileImageLarge, profileImageMedium],
-    genres
-  },
-  heartSelected,
-  onHeartClick
-}) => {
+
+const ArtistPlaceholder = () => {
   return (
-    <ArtistContainer
-      whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
-    >
-      <Artwork url={profileImageMedium.url} />
+    <ArtistContainer>
+      <Artwork />
       <ArtistInfos>
-        <ArtistName>{name}</ArtistName>
-        <Genres>{genres.slice(1, 10).join(", ")}</Genres>
-        <StyledLikeButton onClick={onHeartClick} />
+        <ArtistName>Maazel</ArtistName>
+        <Genres>Rock, hip hop, Bal-musette</Genres>
+        <StyledLikeButton />
       </ArtistInfos>
     </ArtistContainer>
   );
 };
-export default Artist;
+export default ArtistPlaceholder;

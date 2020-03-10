@@ -14,26 +14,32 @@ const TrackContainer = styled(motion.div)`
 const Artwork = styled.div`
   height: 80px;
   width: 80px;
-  border-radius: 2px;
   padding: 4px;
   background-color: #d2d2d2;
+  border-radius: 2px;
   background-image: url(${p => p.url});
   background-size: cover;
 `;
 
 const TrackInfos = styled.div`
   margin-left: 24px;
+  p {
+    font-size: 0;
+    background-color: #d2d2d2;
+  }
 `;
 
 const TrackName = styled.p`
   line-height: 32px;
   font-size: 24px;
+  width: 200px;
 `;
 
 const Artist = styled.p`
   line-height: 24px;
   font-size: 16px;
   color: #838383;
+  width: 600px;
   margin-top: 4px;
 `;
 
@@ -41,30 +47,19 @@ const Misc = styled.p`
   line-height: 24px;
   font-size: 16px;
   color: #838383;
+  width: 300px;
   margin-top: 4px;
 `;
 
-const Track = ({
-  track: {
-    name,
-    artists,
-    album_type,
-    images: [artwork = ""]
-  }
-}) => (
+const TrackPlaceholder = ({}) => (
   <TrackContainer animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-    <Artwork url={artwork.url} />
+    <Artwork />
     <TrackInfos>
-      <TrackName>{name}</TrackName>
-      <Artist>
-        {artists
-          .map(artist => artist.name)
-          .slice(0, 10)
-          .join(", ")}
-      </Artist>
-      <Misc>{album_type}</Misc>
+      <TrackName>Name</TrackName>
+      <Artist>Maazel</Artist>
+      <Misc>Single</Misc>
     </TrackInfos>
   </TrackContainer>
 );
 
-export default Track;
+export default TrackPlaceholder;

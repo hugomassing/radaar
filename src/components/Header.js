@@ -1,5 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components";
+import { Link } from "react-router-dom";
 
 const HeaderContainer = styled.div`
   height: 80px;
@@ -29,7 +30,6 @@ const MenuItem = styled.li`
   margin: 0 16px;
   line-height: 24px;
   font-size: 16px;
-  cursor: pointer;
   ${({ selected }) =>
     selected &&
     css`
@@ -46,21 +46,21 @@ const MenuItem = styled.li`
     `}
 `;
 
+const StyledLink = styled(Link)`
+  color: inherit;
+  text-decoration: none;
+`;
 const Header = ({ setSelectedMenu, selectedMenu }) => (
   <HeaderContainer>
-    <Logo>Radaar</Logo>
+    <Logo>
+      <StyledLink to="/">Radaar</StyledLink>
+    </Logo>
     <Menu>
-      <MenuItem
-        selected={selectedMenu === "feed"}
-        onClick={() => setSelectedMenu("feed")}
-      >
-        Releases
+      <MenuItem>
+        <StyledLink to="/">Releases</StyledLink>
       </MenuItem>
-      <MenuItem
-        selected={selectedMenu === "artists"}
-        onClick={() => setSelectedMenu("artists")}
-      >
-        Artists
+      <MenuItem>
+        <StyledLink to="/artists">Artists</StyledLink>
       </MenuItem>
     </Menu>
   </HeaderContainer>

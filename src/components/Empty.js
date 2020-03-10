@@ -8,11 +8,13 @@ const EmptyWrapper = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
 const EmptyText = styled.p`
   font-size: 32px;
   text-align: center;
   margin-top: 32px;
 `;
+
 const Green = styled.a`
   color: #03da8c;
   cursor: pointer;
