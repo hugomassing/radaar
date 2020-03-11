@@ -19,6 +19,7 @@ const GlobalStyle = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
     font-weight: 500;
     color: #232323;
+    height: 100vh;
   }
   #root {
     height: 100%;
@@ -30,6 +31,7 @@ const AppContainer = styled.div`
   align-items: center;
   min-height: 100%;
 `;
+
 const Content = styled.section`
   width: 80%;
   max-width: 1040px;

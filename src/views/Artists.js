@@ -4,7 +4,6 @@ import useAxios from "axios-hooks";
 import Artist from "../components/Artist";
 import AuthContext from "../Auth.context";
 import ReactPlaceholder from "react-placeholder";
-import "react-placeholder/lib/reactPlaceholder.css";
 import ArtistPlaceholder from "../components/ArtistPlaceholder";
 
 const H1 = styled.h1`
@@ -121,9 +120,11 @@ const Feed = () => {
 
       <Artists>
         {loading
-          ? [0, 1, 2, 3, 4, 5].map(() => (
-              <ReactPlaceholder customPlaceholder={<ArtistPlaceholder />} />
-            ))
+          ? localArtists
+              .slice(1, 6)
+              .map(() => (
+                <ReactPlaceholder customPlaceholder={<ArtistPlaceholder />} />
+              ))
           : artists.map(artist => (
               <Artist
                 artist={artist}
