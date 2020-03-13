@@ -25,16 +25,23 @@ const TrackInfos = styled.div`
   margin-left: 24px;
 `;
 
-const TrackName = styled.p`
+const TrackName = styled.a`
   line-height: 32px;
   font-size: 24px;
+  color: inherit;
+  text-decoration: none;
 `;
 
-const Artist = styled.p`
+const Artists = styled.p`
   line-height: 24px;
   font-size: 16px;
   color: #838383;
   margin-top: 4px;
+`;
+
+const ArtistLink = styled.a`
+  text-decoration: none;
+  color: inherit;
 `;
 
 const Misc = styled.p`
@@ -48,6 +55,7 @@ const Track = ({
   track: {
     name,
     artists,
+    external_urls,
     album_type,
     images: [artwork = ""]
   }
@@ -55,13 +63,18 @@ const Track = ({
   <TrackContainer animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
     <Artwork url={artwork.url} />
     <TrackInfos>
-      <TrackName>{name}</TrackName>
-      <Artist>
-        {artists
-          .map(artist => artist.name)
-          .slice(0, 10)
-          .join(", ")}
-      </Artist>
+      <TrackName href={external_urls.spotify}>{name}</TrackName>
+      <Artists>
+        {artists.slice(0, 10).map(artist => (
+          <ArtistLink
+            href={artist.external_urls.spotify}
+            target="_blank"
+            rel="noopener"
+          >
+            {artist.name}
+          </ArtistLink>
+        ))}
+      </Artists>
       <Misc>{album_type}</Misc>
     </TrackInfos>
   </TrackContainer>
