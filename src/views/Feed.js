@@ -5,10 +5,10 @@ import dayjs from "dayjs";
 import ReactPlaceholder from "react-placeholder";
 import isBetween from "dayjs/plugin/isBetween";
 import Track from "../components/Track";
-import { motion } from "framer-motion";
 import TrackPlaceholder from "../components/TrackPlaceholder";
 import Empty from "../components/Empty";
 import AuthContext from "../Auth.context";
+import Green from "../components/Green";
 dayjs.extend(isBetween);
 
 const EmptyContent = styled.div`
@@ -24,10 +24,6 @@ const TrackList = styled.div`
   & > div {
     margin-top: 16px;
   }
-`;
-
-const Green = styled.a`
-  color: #03da8c;
 `;
 
 const DateLabel = styled.div`

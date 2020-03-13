@@ -51,7 +51,7 @@ const Misc = styled.p`
   margin-top: 4px;
 `;
 
-const TrackPlaceholder = ({}) => (
+const TrackPlaceholder = () => (
   <TrackContainer animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
     <Artwork />
     <TrackInfos>

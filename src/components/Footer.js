@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { ReactComponent as Heart } from "../img/like-full.svg";
 import { ReactComponent as Empty } from "../img/like-empty.svg";
+import Green from "./Green";
 
 const FooterWrapper = styled.div`
   width: 100%;
@@ -18,12 +19,7 @@ const Love = styled.div`
   cursor: pointer;
 `;
 
-const Green = styled.a`
-  color: #03da8c;
-  cursor: pointer;
-  :hover {
-    text-decoration: underline;
-  }
+const StyledGreen = styled(Green)`
   margin-left: 8px;
 `;
 
@@ -40,13 +36,14 @@ const Footer = () => {
         )}
       </Love>
       by{"  "}
-      <Green
+      <StyledGreen
+        link
         target="_blank"
         rel="noopener"
         href="https://github.com/hugomassing"
       >
         Hugo Massing
-      </Green>
+      </StyledGreen>
     </FooterWrapper>
   );
 };

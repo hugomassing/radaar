@@ -42,6 +42,9 @@ const Artists = styled.p`
 const ArtistLink = styled.a`
   text-decoration: none;
   color: inherit;
+  :hover {
+    text-decoration: underline;
+  }
 `;
 
 const Misc = styled.p`
@@ -61,18 +64,23 @@ const Track = ({
   }
 }) => (
   <TrackContainer animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-    <Artwork url={artwork.url} />
+    <a href={external_urls.spotify} target="_blank" rel="noopener noreferrer">
+      <Artwork url={artwork.url} />
+    </a>
     <TrackInfos>
       <TrackName href={external_urls.spotify}>{name}</TrackName>
       <Artists>
-        {artists.slice(0, 10).map(artist => (
-          <ArtistLink
-            href={artist.external_urls.spotify}
-            target="_blank"
-            rel="noopener"
-          >
-            {artist.name}
-          </ArtistLink>
+        {artists.slice(0, 10).map((artist, index) => (
+          <>
+            {index !== 0 && ", "}
+            <ArtistLink
+              href={artist.external_urls.spotify}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {artist.name}
+            </ArtistLink>
+          </>
         ))}
       </Artists>
       <Misc>{album_type}</Misc>

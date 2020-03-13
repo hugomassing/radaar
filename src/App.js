@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import Feed from "./views/Feed";
 import Artists from "./views/Artists";
@@ -25,6 +25,13 @@ const GlobalStyle = createGlobalStyle`
   #root {
     height: 100%;
   }
+  a {
+    text-decoration: none;
+    color: inherit;
+    :hover {
+      text-decoration: underline;
+    }
+  }
 `;
 const AppContainer = styled.div`
   display: flex;
@@ -42,8 +49,7 @@ const Content = styled.section`
   flex-grow: 2;
 `;
 
-function App() {
-  const [selectedMenu, setSelectedMenu] = useState("feed");
+const App = () => {
   const [{ data, loading }] = useAxios({
     url: `https://radaar-back.now.sh/api`,
     headers: {
@@ -76,5 +82,6 @@ function App() {
       </AuthContext.Provider>
     )
   );
-}
+};
+
 export default App;

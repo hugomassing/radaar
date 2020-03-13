@@ -2,9 +2,11 @@ import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import useAxios from "axios-hooks";
 import Artist from "../components/Artist";
+import Green from "../components/Green";
 import AuthContext from "../Auth.context";
 import ReactPlaceholder from "react-placeholder";
 import ArtistPlaceholder from "../components/ArtistPlaceholder";
+import ArtistsLayout from "../components/ArtistsLayout";
 
 const H1 = styled.h1`
   line-height: 40px;
@@ -30,10 +32,14 @@ const SearchItem = styled.li`
     background: #f2f2f2;
   }
 `;
+
 const Search = styled.div`
   position: relative;
   width: 240px;
+  display: inline-block;
+  margin-right: 16px;
 `;
+
 const SearchInput = styled.input`
   box-sizing: border-box;
   width: 100%;
@@ -47,13 +53,6 @@ const SearchInput = styled.input`
     font-weight: 100;
   }
   outline-color: #f2f2f2;
-`;
-const Artists = styled.div`
-  margin-top: 40px;
-  position: relative;
-  display: grid;
-  grid: auto-flow / 1fr 1fr 1fr;
-  grid-gap: 40px;
 `;
 const Feed = () => {
   const [inputFocus, setInputFocus] = useState(false);
@@ -117,8 +116,12 @@ const Feed = () => {
           </SearchResults>
         )}
       </Search>
-
-      <Artists>
+      or{" "}
+      <Green link href="/import">
+        import your artists
+      </Green>{" "}
+      from Spotify
+      <ArtistsLayout>
         {loading
           ? localArtists
               .slice(1, 6)
@@ -132,7 +135,7 @@ const Feed = () => {
                 onHeartClick={() => removeArtist(artist.id)}
               />
             ))}
-      </Artists>
+      </ArtistsLayout>
     </div>
   );
 };

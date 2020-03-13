@@ -1,0 +1,8 @@
+{
+  "build": {
+    "env": {
+      "REACT_APP_SPOTIFY_CLIENT_ID": "@spotify-client-id",
+      "REACT_APP_DOMAIN": "https://radaar.now.sh"
+    }
+  }
+}

@@ -11,6 +11,7 @@
     "dayjs": "^1.8.22",
     "framer-motion": "^1.9.1",
     "lodash": "^4.17.15",
+    "polished": "^3.4.4",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-placeholder": "^4.0.0",

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Artist from "../components/Artist";
+import Green from "../components/Green";
+import ArtistsLayout from "../components/ArtistsLayout";
 
 const H1 = styled.h1`
   line-height: 40px;
@@ -21,17 +23,17 @@ const Button = styled.button`
   font: inherit;
 `;
 
-const Artists = styled.div`
-  margin-top: 40px;
-  position: relative;
-  display: grid;
-  grid: auto-flow / 1fr 1fr 1fr;
-  grid-gap: 40px;
+const Label = styled.p`
+  line-height: 24px;
+  font-size: 16px;
+  color: #aaaaaa;
 `;
-const scopes = ["user-follow-read"];
 
-const Import = ({}) => {
+const scopes = ["user-follow-read", "user-top-read"];
+
+const Import = () => {
   const [authToken, setAuthToken] = useState(null);
+  const [topArtists, setTopArtists] = useState(null);
   const [artists, setArtists] = useState(null);
   const [localArtists, setLocalArtists] = useState(
     JSON.parse(localStorage.getItem("artists")) || []
@@ -67,16 +69,23 @@ const Import = ({}) => {
 
   useEffect(() => {
     if (authToken) {
-      fetch("https://api.spotify.com/v1/me/following?type=artist", {
+      fetch("https://api.spotify.com/v1/me/following?type=artist&limit=50", {
         headers: {
           Authorization: `Bearer ${authToken}`
         }
       })
-        .then(response => {
-          return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
           setArtists(data.artists.items);
+        });
+      fetch("https://api.spotify.com/v1/me/top/artists?limit=50", {
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          setTopArtists(data.items);
         });
     }
   }, [authToken]);
@@ -109,18 +118,44 @@ const Import = ({}) => {
       <H1>Import your artists</H1>
       {!authToken && <Button onClick={login}>Connect with Spotify</Button>}
       {artists && (
-        <Artists>
-          {artists.map(artist => {
-            debugger;
-            return (
-              <Artist
-                artist={artist}
-                heartSelected={localArtists.includes(artist.id)}
-                onHeartClick={() => handleArtist(artist.id)}
-              />
-            );
-          })}
-        </Artists>
+        <>
+          <Label>
+            Artists you are following on <Green>Spotify</Green>
+          </Label>
+          <ArtistsLayout small>
+            {artists.map(artist => {
+              return (
+                <Artist
+                  key={artist.id}
+                  artist={artist}
+                  heartSelected={localArtists.includes(artist.id)}
+                  onHeartClick={() => handleArtist(artist.id)}
+                  small
+                />
+              );
+            })}
+          </ArtistsLayout>
+        </>
+      )}
+      {topArtists && (
+        <>
+          <Label>
+            Your top artists on <Green>Spotify</Green>
+          </Label>
+          <ArtistsLayout small>
+            {topArtists.map(artist => {
+              return (
+                <Artist
+                  key={artist.id}
+                  artist={artist}
+                  heartSelected={localArtists.includes(artist.id)}
+                  onHeartClick={() => handleArtist(artist.id)}
+                  small
+                />
+              );
+            })}
+          </ArtistsLayout>
+        </>
       )}
     </div>
   );
