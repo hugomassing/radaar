@@ -82,7 +82,9 @@ const Import = ({}) => {
   }, [authToken]);
 
   const login = () => {
-    const redirectUrl = encodeURIComponent("http://localhost:3000/import");
+    const redirectUrl = encodeURIComponent(
+      `${process.env.REACT_APP_DOMAIN}/import`
+    );
     window.open(
       `https://accounts.spotify.com/authorize?client_id=${
         process.env.REACT_APP_SPOTIFY_CLIENT_ID
