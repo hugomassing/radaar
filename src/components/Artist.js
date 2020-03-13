@@ -54,6 +54,7 @@ const ArtistName = styled.p`
       font-size: 16px;
     `}
 `;
+
 const Genres = styled.p`
   line-height: 24px;
   font-size: 16px;
@@ -65,11 +66,13 @@ const Genres = styled.p`
       ${ellipsis("128px")}
     `}
 `;
+
 const StyledLikeButton = styled(LikeButton)`
   position: absolute;
   right: 0;
   top: 0;
 `;
+
 const Artist = ({
   artist: {
     name,
@@ -119,4 +122,5 @@ const Artist = ({
     </ArtistContainer>
   );
 };
+
 export default Artist;

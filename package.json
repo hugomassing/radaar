@@ -18,7 +18,9 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "styled-components": "^5.0.1",
-    "styled-reset": "^4.1.1"
+    "styled-reset": "^4.1.1",
+    "swr": "^0.1.18",
+    "unfetch": "^4.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
