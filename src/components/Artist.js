@@ -55,7 +55,7 @@ const Artist = ({
       <ArtistInfos>
         <ArtistName>{name}</ArtistName>
         <Genres>{genres.slice(1, 10).join(", ")}</Genres>
-        <StyledLikeButton onClick={onHeartClick} />
+        <StyledLikeButton onClick={onHeartClick} active={!heartSelected} />
       </ArtistInfos>
     </ArtistContainer>
   );

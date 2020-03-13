@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import Feed from "./views/Feed";
 import Artists from "./views/Artists";
+import Import from "./views/Import";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import reset from "styled-reset";
@@ -63,6 +64,9 @@ function App() {
                 </Route>
                 <Route path="/artists">
                   <Artists />
+                </Route>
+                <Route path="/import">
+                  <Import />
                 </Route>
               </Switch>
             </Content>
