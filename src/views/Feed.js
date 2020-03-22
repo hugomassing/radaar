@@ -65,7 +65,9 @@ const dateRanges = [
         .add(1, "minute"),
       dayjs()
         .startOf("day")
+        .subtract(2, "day")
         .subtract(1, "week")
+        .day(0)
         .add(1, "minute")
     ]
   },
@@ -75,9 +77,12 @@ const dateRanges = [
       dayjs()
         .startOf("day")
         .subtract(1, "week")
+        .day(0)
         .add(1, "minute"),
       dayjs()
+        .startOf("day")
         .subtract(1, "month")
+        .date(1)
         .add(1, "minute")
     ]
   },
@@ -87,6 +92,7 @@ const dateRanges = [
       dayjs()
         .startOf("day")
         .subtract(1, "month")
+        .date(1)
         .add(1, "minute"),
       dayjs("1992-02-22")
     ]

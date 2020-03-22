@@ -1,6 +1,7 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
+import Search from "./SearchInput";
 
 const HeaderContainer = styled.div`
   height: 80px;
@@ -31,38 +32,62 @@ const MenuItem = styled.li`
   line-height: 24px;
   font-size: 16px;
   ${({ selected }) =>
-    selected &&
-    css`
-      :after {
-        content: "";
-        position: absolute;
-        left: calc(50% - 8px);
-        bottom: -4px;
-        background-color: white;
-        border-radius: 2px;
-        height: 4px;
-        width: 16px;
-      }
-    `}
+      selected &&
+      css`
+        :after {
+          content: "";
+          position: absolute;
+          left: calc(50% - 8px);
+          bottom: -4px;
+          background-color: white;
+          border-radius: 2px;
+          height: 4px;
+          width: 16px;
+        }
+      `}
+    :hover {
+    text-decoration: none;
+  }
 `;
 
 const StyledLink = styled(Link)`
   color: inherit;
   text-decoration: none;
+  :hover {
+    text-decoration: none;
+  }
 `;
-const Header = ({ setSelectedMenu, selectedMenu }) => (
+
+const StyledSearch = styled(Search)`
+  margin-left: 32px;
+`;
+
+const Header = ({ search, setSearch }) => (
   <HeaderContainer>
     <Logo>
-      <StyledLink to="/">Radaar</StyledLink>
+      <StyledLink to="/" onClick={() => setSearch("")}>
+        Radaar
+      </StyledLink>
     </Logo>
+
     <Menu>
       <MenuItem>
-        <StyledLink to="/">Releases</StyledLink>
+        <StyledLink to="/" onClick={() => setSearch("")}>
+          Releases
+        </StyledLink>
       </MenuItem>
       <MenuItem>
-        <StyledLink to="/artists">Artists</StyledLink>
+        <StyledLink to="/artists" onClick={() => setSearch("")}>
+          My artists
+        </StyledLink>
       </MenuItem>
     </Menu>
+    <StyledSearch
+      value={search}
+      onChange={e => setSearch(e.target.value)}
+      placeholder="search an artist"
+      results={null}
+    />
   </HeaderContainer>
 );
 

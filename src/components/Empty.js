@@ -20,7 +20,7 @@ const Empty = ({ onArtistClick }) => (
   <EmptyWrapper>
     <Search />
     <EmptyText>
-      Oops! Looks like you are not following any artists. Go to the{" "}
+      Looks like you are not following any artists. Go to the{" "}
       <Green link onClick={onArtistClick}>
         artist
       </Green>{" "}

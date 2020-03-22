@@ -3,7 +3,6 @@ import styled from "styled-components";
 import useAxios from "axios-hooks";
 import Artist from "../components/Artist";
 import Green from "../components/Green";
-import Search from "../components/SearchInput";
 import AuthContext from "../Auth.context";
 import ReactPlaceholder from "react-placeholder";
 import ArtistPlaceholder from "../components/ArtistPlaceholder";
@@ -15,16 +14,16 @@ const H1 = styled.h1`
   margin-bottom: 24px;
 `;
 
-const Artists = () => {
-  const [inputFocus, setInputFocus] = useState(false);
-  const [search, setSearch] = useState("");
+const Search = ({ search }) => {
   const { accessToken } = useContext(AuthContext);
   const [localArtists, setLocalArtists] = useState(
     JSON.parse(localStorage.getItem("artists")) || []
   );
 
-  const [{ data: { artists } = { artists: [] }, loading }] = useAxios({
-    url: `https://api.spotify.com/v1/artists/?ids=${localArtists.join(",")}`,
+  const [{ data, loading, error }] = useAxios({
+    url: `https://api.spotify.com/v1/search/?q=${encodeURI(
+      search
+    )}&type=artist&limit=10`,
     headers: {
       Authorization: `Bearer ${accessToken}`
     }
@@ -34,11 +33,9 @@ const Artists = () => {
     localStorage.setItem("artists", JSON.stringify(localArtists));
   }, [localArtists]);
 
-  const addArtist = artist => {
-    if (!localArtists.includes(artist.id) && artist.id)
-      setLocalArtists(state => [...state, artist.id]);
-    setSearch(artist.name);
-    setInputFocus(false);
+  const addArtist = artistId => {
+    if (!localArtists.includes(artistId) && artistId)
+      setLocalArtists(state => [...state, artistId]);
   };
 
   const removeArtist = artistId => {
@@ -47,27 +44,29 @@ const Artists = () => {
 
   return (
     <div>
-      <H1>Artists</H1>
+      <H1>Results</H1>
       <Green link href="/import">
         import your artists
       </Green>{" "}
       from Spotify
       <ArtistsLayout>
         {loading
-          ? localArtists
-              .slice(1, 6)
-              .map(() => (
-                <ReactPlaceholder customPlaceholder={<ArtistPlaceholder />} />
-              ))
-          : artists.map(artist => (
+          ? [1, 2, 3, 4, 5, 6].map(() => (
+              <ReactPlaceholder customPlaceholder={<ArtistPlaceholder />} />
+            ))
+          : data.artists.items.map(artist => (
               <Artist
                 artist={artist}
-                heartSelected={true}
-                onHeartClick={() => removeArtist(artist.id)}
+                heartSelected={localArtists.includes(artist.id)}
+                onHeartClick={() =>
+                  localArtists.includes(artist.id)
+                    ? removeArtist(artist.id)
+                    : addArtist(artist.id)
+                }
               />
             ))}
       </ArtistsLayout>
     </div>
   );
 };
-export default Artists;
+export default Search;

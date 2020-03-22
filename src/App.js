@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import Feed from "./views/Feed";
+import Search from "./views/Search";
 import Artists from "./views/Artists";
 import Import from "./views/Import";
 import Header from "./components/Header";
@@ -50,6 +51,7 @@ const Content = styled.section`
 `;
 
 const App = () => {
+  const [search, setSearch] = useState("");
   const [{ data, loading }] = useAxios({
     url: `https://radaar-back.now.sh/api`,
     headers: {
@@ -62,19 +64,23 @@ const App = () => {
         <AppContainer>
           <Router>
             <GlobalStyle />
-            <Header />
+            <Header search={search} setSearch={setSearch} />
             <Content>
-              <Switch>
-                <Route path="/" exact>
-                  <Feed />
-                </Route>
-                <Route path="/artists">
-                  <Artists />
-                </Route>
-                <Route path="/import">
-                  <Import />
-                </Route>
-              </Switch>
+              {search ? (
+                <Search search={search} />
+              ) : (
+                <Switch>
+                  <Route path="/" exact>
+                    <Feed />
+                  </Route>
+                  <Route path="/artists">
+                    <Artists />
+                  </Route>
+                  <Route path="/import">
+                    <Import />
+                  </Route>
+                </Switch>
+              )}
             </Content>
             <Footer />
           </Router>
