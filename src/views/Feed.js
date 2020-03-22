@@ -76,6 +76,7 @@ const dateRanges = [
     dateRange: [
       dayjs()
         .startOf("day")
+        .subtract(2, "day")
         .subtract(1, "week")
         .day(0)
         .add(1, "minute"),

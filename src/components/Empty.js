@@ -16,15 +16,12 @@ const EmptyText = styled.p`
   margin-top: 32px;
 `;
 
-const Empty = ({ onArtistClick }) => (
+const Empty = () => (
   <EmptyWrapper>
     <Search />
     <EmptyText>
-      Looks like you are not following any artists. Go to the{" "}
-      <Green link onClick={onArtistClick}>
-        artist
-      </Green>{" "}
-      page to add your favorite artists.
+      Looks like you are not following any artists. You can{" "}
+      <Green>search</Green> for your favorite artists and start following them.
     </EmptyText>
   </EmptyWrapper>
 );

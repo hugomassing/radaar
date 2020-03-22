@@ -9,6 +9,7 @@ const TrackContainer = styled(motion.div)`
   padding: 16px;
   display: flex;
   opacity: 0;
+  box-shadow: 4px 4px 8px rgba(204, 204, 204, 0.5);
 `;
 
 const Artwork = styled.div`

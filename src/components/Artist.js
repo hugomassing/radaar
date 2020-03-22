@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import { ellipsis } from "polished";
 import LikeButton from "./LikeButton";
 import { motion } from "framer-motion";
+import Dotdotdot from "react-dotdotdot";
 
 const ArtistContainer = styled(motion.div)`
   background: #f2f2f2;
@@ -107,7 +108,7 @@ const Artist = ({
             target="_blank"
             rel="noopener noreferrer"
           >
-            {name}
+            <Dotdotdot clamp={2}>{name}</Dotdotdot>
           </a>
         </ArtistName>
         <Genres small={small}>
