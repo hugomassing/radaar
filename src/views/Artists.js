@@ -32,6 +32,7 @@ const Artists = () => {
   }, [localArtists]);
 
   const removeArtist = artistId => {
+    console.log(localArtists.filter(id => id !== artistId));
     setLocalArtists(localArtists.filter(id => id !== artistId));
   };
 
@@ -42,21 +43,23 @@ const Artists = () => {
         import your artists
       </Green>{" "}
       from Spotify
-      <ArtistsLayout>
-        {loading
-          ? localArtists
-              .slice(1, 6)
-              .map(() => (
-                <ReactPlaceholder customPlaceholder={<ArtistPlaceholder />} />
-              ))
-          : artists.map(artist => (
-              <Artist
-                artist={artist}
-                heartSelected={true}
-                onHeartClick={() => removeArtist(artist.id)}
-              />
-            ))}
-      </ArtistsLayout>
+      {localArtists.length > 0 && (
+        <ArtistsLayout>
+          {loading
+            ? localArtists
+                .slice(1, 6)
+                .map(() => (
+                  <ReactPlaceholder customPlaceholder={<ArtistPlaceholder />} />
+                ))
+            : artists.map(artist => (
+                <Artist
+                  artist={artist}
+                  heartSelected={true}
+                  onHeartClick={() => removeArtist(artist.id)}
+                />
+              ))}
+        </ArtistsLayout>
+      )}
     </div>
   );
 };

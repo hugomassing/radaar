@@ -10,6 +10,7 @@ import reset from "styled-reset";
 import AuthContext from "./Auth.context";
 import useAxios from "axios-hooks";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { ReactComponent as Loader } from "./img/loading.svg";
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -34,6 +35,16 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 `;
+
+const LoadingScreen = styled.div`
+  height: 100vh;
+  width: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease-in-out;
+`;
+
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -53,19 +64,23 @@ const Content = styled.section`
 const App = () => {
   const [search, setSearch] = useState("");
   const [{ data, loading }] = useAxios({
-    url: `https://radaar-back.now.sh/token`,
+    url: `${process.env.REACT_APP_API_DOMAIN}/api/token`,
     headers: {
       "content-type": "application/json"
     }
   });
   return (
-    !loading && (
-      <AuthContext.Provider value={{ accessToken: data.access_token }}>
-        <AppContainer>
-          <Router>
-            <GlobalStyle />
-            <Header search={search} setSearch={setSearch} />
-            <Content>
+    <AppContainer>
+      {loading ? (
+        <LoadingScreen>
+          <Loader />
+        </LoadingScreen>
+      ) : (
+        <Router>
+          <GlobalStyle />
+          <Header search={search} setSearch={setSearch} />
+          <Content>
+            <AuthContext.Provider value={{ accessToken: data.access_token }}>
               {search ? (
                 <Search search={search} />
               ) : (
@@ -81,12 +96,12 @@ const App = () => {
                   </Route>
                 </Switch>
               )}
-            </Content>
-            <Footer />
-          </Router>
-        </AppContainer>
-      </AuthContext.Provider>
-    )
+            </AuthContext.Provider>
+          </Content>
+          <Footer />
+        </Router>
+      )}
+    </AppContainer>
   );
 };
 export default App;

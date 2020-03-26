@@ -104,10 +104,13 @@ const Feed = ({ setSelectedMenu }) => {
     []
   );
 
+  const albumLimit = localArtists.length < 10 ? 10 : 5;
   const [{ data, loading }] = useAxios({
-    url: `https://radaar-back.now.sh/api/get-tracks?ids=${localArtists.join(
+    url: `${
+      process.env.REACT_APP_API_DOMAIN
+    }/api/get-tracks?ids=${localArtists.join(
       ","
-    )}`
+    )}&limit=50&albumLimit=${albumLimit}`
   });
 
   return localArtists.length > 0 ? (
