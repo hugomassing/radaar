@@ -20,7 +20,7 @@ const Search = ({ search }) => {
     JSON.parse(localStorage.getItem("artists")) || []
   );
 
-  const [{ data, loading, error }] = useAxios({
+  const [{ data, loading }] = useAxios({
     url: `https://api.spotify.com/v1/search/?q=${encodeURI(
       search
     )}&type=artist&limit=10`,
@@ -44,7 +44,7 @@ const Search = ({ search }) => {
 
   return (
     <div>
-      <H1>Results</H1>
+      <H1>Results for : {search}</H1>
       <Green link href="/import">
         import your artists
       </Green>{" "}

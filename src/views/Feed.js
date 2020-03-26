@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useMemo, useContext } from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
-import axios from "axios";
+import useAxios from "axios-hooks";
 import dayjs from "dayjs";
 import ReactPlaceholder from "react-placeholder";
 import isBetween from "dayjs/plugin/isBetween";
 import Track from "../components/Track";
 import TrackPlaceholder from "../components/TrackPlaceholder";
 import Empty from "../components/Empty";
-import AuthContext from "../Auth.context";
 import Green from "../components/Green";
 dayjs.extend(isBetween);
 
@@ -100,71 +99,16 @@ const dateRanges = [
   }
 ];
 const Feed = ({ setSelectedMenu }) => {
-  const [tracks, setTracks] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const { accessToken } = useContext(AuthContext);
   const localArtists = useMemo(
     () => JSON.parse(localStorage.getItem("artists")) || [],
     []
   );
-  useEffect(() => {
-    const fetchTracks = artists => {
-      setLoading(true);
-      Promise.all(
-        artists.map(artistId =>
-          axios.get(
-            `https://api.spotify.com/v1/artists/${artistId}/albums?country=FR`,
-            {
-              headers: {
-                Authorization: `Bearer ${accessToken}`
-              }
-            }
-          )
-        )
-      )
-        .then(responses => responses.map(res => res.data.items).flat())
-        .then(responses =>
-          Promise.all(
-            responses.map(async element => {
-              if (
-                element.album_group === "appears_on" &&
-                element.album_type !== "compilation"
-              ) {
-                const {
-                  data: { items }
-                } = await axios.get(
-                  `https://api.spotify.com/v1/albums/${element.id}/tracks`,
-                  {
-                    headers: {
-                      Authorization: `Bearer ${accessToken}`
-                    }
-                  }
-                );
-                return {
-                  ...element,
-                  artists: [
-                    ...element.artists,
-                    ...items.map(track => track.artists).flat()
-                  ].reduce(
-                    (unique, item) =>
-                      unique.find(({ id }) => id === item.id)
-                        ? unique
-                        : [...unique, item],
-                    []
-                  )
-                };
-              }
-              return element;
-            })
-          )
-        )
-        .then(tracksRes => {
-          setTracks(tracksRes);
-          setLoading(false);
-        });
-    };
-    fetchTracks(localArtists);
-  }, [localArtists, setTracks, accessToken]);
+
+  const [{ data, loading }] = useAxios({
+    url: `https://radaar-back.now.sh/api/get-tracks?ids=${localArtists.join(
+      ","
+    )}`
+  });
 
   return localArtists.length > 0 ? (
     <div>
@@ -181,7 +125,7 @@ const Feed = ({ setSelectedMenu }) => {
           </>
         ) : (
           dateRanges.map(range => {
-            return tracks
+            return data
               .filter(track => track.album_type !== "compilation")
               .reduce(
                 (unique, item) =>

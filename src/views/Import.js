@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+
 import Artist from "../components/Artist";
 import Green from "../components/Green";
 import ArtistsLayout from "../components/ArtistsLayout";
+
+import useSpotifyToken from "../hooks/useSpotifyToken";
 
 const H1 = styled.h1`
   line-height: 40px;
@@ -32,21 +35,27 @@ const Label = styled.p`
 const scopes = ["user-follow-read", "user-top-read"];
 
 const Import = () => {
-  const [authToken, setAuthToken] = useState(null);
   const [topArtists, setTopArtists] = useState(null);
   const [artists, setArtists] = useState(null);
+  const { spotifyToken, setToken } = useSpotifyToken();
   const [localArtists, setLocalArtists] = useState(
     JSON.parse(localStorage.getItem("artists")) || []
   );
   const token = window.location.hash
-    .substr(1)
-    .split("&")[0]
-    .split("=")[1];
+    ?.substr(1)
+    ?.split("&")[0]
+    ?.split("=")[1];
+
+  const expiresIn = window.location.hash
+    ?.substr(1)
+    ?.split("&")[2]
+    ?.split("=")[1];
 
   if (token) {
     window.opener.postMessage({
       status: "auth_token",
-      token: token
+      token: token,
+      expiresIn: expiresIn
     });
     window.close();
   }
@@ -60,7 +69,7 @@ const Import = () => {
       "message",
       ({ data }) => {
         if (data.status === "auth_token") {
-          setAuthToken(data.token);
+          setToken(data.token, data.expiresIn);
         }
       },
       false
@@ -68,10 +77,10 @@ const Import = () => {
   });
 
   useEffect(() => {
-    if (authToken) {
+    if (spotifyToken) {
       fetch("https://api.spotify.com/v1/me/following?type=artist&limit=50", {
         headers: {
-          Authorization: `Bearer ${authToken}`
+          Authorization: `Bearer ${spotifyToken}`
         }
       })
         .then(response => response.json())
@@ -80,7 +89,7 @@ const Import = () => {
         });
       fetch("https://api.spotify.com/v1/me/top/artists?limit=50", {
         headers: {
-          Authorization: `Bearer ${authToken}`
+          Authorization: `Bearer ${spotifyToken}`
         }
       })
         .then(response => response.json())
@@ -88,7 +97,7 @@ const Import = () => {
           setTopArtists(data.items);
         });
     }
-  }, [authToken]);
+  }, [spotifyToken]);
 
   const login = () => {
     const redirectUrl = encodeURIComponent(
@@ -116,7 +125,7 @@ const Import = () => {
   return (
     <div>
       <H1>Import your artists</H1>
-      {!authToken && <Button onClick={login}>Connect with Spotify</Button>}
+      {!spotifyToken && <Button onClick={login}>Connect with Spotify</Button>}
       {artists && (
         <>
           <Label>

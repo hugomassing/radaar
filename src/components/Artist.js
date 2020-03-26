@@ -108,7 +108,9 @@ const Artist = ({
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Dotdotdot clamp={2}>{name}</Dotdotdot>
+            <Dotdotdot tagName="span" clamp={2}>
+              {name}
+            </Dotdotdot>
           </a>
         </ArtistName>
         <Genres small={small}>

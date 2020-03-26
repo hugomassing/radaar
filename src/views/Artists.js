@@ -3,7 +3,6 @@ import styled from "styled-components";
 import useAxios from "axios-hooks";
 import Artist from "../components/Artist";
 import Green from "../components/Green";
-import Search from "../components/SearchInput";
 import AuthContext from "../Auth.context";
 import ReactPlaceholder from "react-placeholder";
 import ArtistPlaceholder from "../components/ArtistPlaceholder";
@@ -16,8 +15,6 @@ const H1 = styled.h1`
 `;
 
 const Artists = () => {
-  const [inputFocus, setInputFocus] = useState(false);
-  const [search, setSearch] = useState("");
   const { accessToken } = useContext(AuthContext);
   const [localArtists, setLocalArtists] = useState(
     JSON.parse(localStorage.getItem("artists")) || []
@@ -33,13 +30,6 @@ const Artists = () => {
   useEffect(() => {
     localStorage.setItem("artists", JSON.stringify(localArtists));
   }, [localArtists]);
-
-  const addArtist = artist => {
-    if (!localArtists.includes(artist.id) && artist.id)
-      setLocalArtists(state => [...state, artist.id]);
-    setSearch(artist.name);
-    setInputFocus(false);
-  };
 
   const removeArtist = artistId => {
     setLocalArtists(localArtists.filter(id => id !== artistId));
