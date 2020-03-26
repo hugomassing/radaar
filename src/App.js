@@ -53,7 +53,7 @@ const Content = styled.section`
 const App = () => {
   const [search, setSearch] = useState("");
   const [{ data, loading }] = useAxios({
-    url: `https://radaar-back.now.sh/api`,
+    url: `https://radaar-back.now.sh/token`,
     headers: {
       "content-type": "application/json"
     }
