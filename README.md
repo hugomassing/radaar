@@ -1,4 +1,4 @@
-Radaar is a website to track all the releases from your favorites artists. 
+Radaar is a website to track all the newest releases from your favorites artists. 
 
 # Features
 
