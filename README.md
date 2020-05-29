@@ -1,6 +1,6 @@
 Radaar is a website to track all the releases from your favorites artists. 
 
-#Features
+# Features
 
 You can : 
 - search and follow artists.
