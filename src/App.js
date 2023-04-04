@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
-import Feed from "./views/Feed";
+import Feed from "./views/FeedV2";
 import Search from "./views/Search";
 import Artists from "./views/Artists";
 import Import from "./views/Import";

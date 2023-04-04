@@ -57,25 +57,24 @@ const Misc = styled.p`
 
 const Track = ({
   track: {
-    name,
+    title,
     artists,
-    external_urls,
-    album_type,
-    images: [artwork = ""]
+    artworkUri,
+    type,
   }
 }) => (
   <TrackContainer animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-    <a href={external_urls.spotify} target="_blank" rel="noopener noreferrer">
-      <Artwork url={artwork.url} />
+    <a href={artworkUri} target="_blank" rel="noopener noreferrer">
+      <Artwork url={artworkUri} />
     </a>
     <TrackInfos>
-      <TrackName href={external_urls.spotify}>{name}</TrackName>
-      <Artists>
-        {artists.slice(0, 10).map((artist, index) => (
+      <TrackName href={artworkUri}>{title}</TrackName>
+     <Artists>
+        {artists.slice(0, 10).map(({artist}, index) => (
           <>
             {index !== 0 && ", "}
             <ArtistLink
-              href={artist.external_urls.spotify}
+              href={artist.spotifyUri}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -84,7 +83,7 @@ const Track = ({
           </>
         ))}
       </Artists>
-      <Misc>{album_type}</Misc>
+      <Misc>{type}</Misc>
     </TrackInfos>
   </TrackContainer>
 );
